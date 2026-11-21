@@ -1,0 +1,270 @@
+/* Twin Tides — Spot the Difference. Deep-sea theme, warm sand accents. */
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0c1b2e;
+  color: #eef4f8;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+#app {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 10px 14px 18px;
+}
+
+#topbar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  padding: 8px 4px 10px;
+}
+
+.brand { display: flex; align-items: baseline; gap: 8px; }
+.brand-mark { font-size: 28px; }
+.brand-name {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #ffd54a;
+}
+.brand-sub { font-size: 15px; color: #9fc3d8; }
+
+.hud {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+.hud-item {
+  background: #14324a;
+  border: 1px solid #2a4d68;
+  border-radius: 10px;
+  padding: 6px 12px;
+  min-width: 86px;
+  text-align: center;
+}
+.hud-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #9fc3d8;
+}
+.hud-item span:last-child { font-size: 19px; font-weight: 700; }
+#found-counter { color: #ffd54a; }
+#combo-value { color: #ff8a80; }
+
+.timer-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 210px;
+}
+#timer-text { font-size: 22px; font-weight: 800; min-width: 52px; }
+#timer-bar {
+  flex: 1;
+  height: 12px;
+  background: #14324a;
+  border: 1px solid #2a4d68;
+  border-radius: 6px;
+  overflow: hidden;
+}
+#timer-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #4caf50, #8bc34a);
+  transition: width 0.2s linear;
+}
+#timer-fill.low { background: linear-gradient(90deg, #e5484d, #ff8a80); }
+
+#level-strip {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 4px 10px;
+  flex-wrap: wrap;
+}
+#level-name { font-size: 20px; font-weight: 700; }
+#level-subtitle { font-size: 14px; color: #9fc3d8; margin-left: 10px; }
+#level-dots { display: flex; gap: 6px; }
+.level-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #14324a;
+  border: 1px solid #2a4d68;
+  color: #9fc3d8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+.level-dot.current { background: #ffd54a; color: #0c1b2e; border-color: #ffd54a; }
+.level-dot.done { background: #2e7d5b; color: #fff; border-color: #2e7d5b; }
+
+#panels {
+  position: relative;
+  display: flex;
+  gap: 16px;
+}
+.panel {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  border: 3px solid #2a4d68;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+.panel canvas { display: block; width: 100%; height: auto; cursor: crosshair; }
+.panel-tag {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  background: rgba(12, 27, 46, 0.85);
+  color: #ffd54a;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  pointer-events: none;
+}
+#overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+#panels.shake { animation: shake 0.25s; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+#found-toast {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%) translateY(8px);
+  z-index: 4;
+  background: rgba(12, 27, 46, 0.92);
+  border: 1px solid #ffd54a;
+  color: #ffd54a;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 7px 16px;
+  border-radius: 20px;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+#found-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+#controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding-top: 12px;
+  flex-wrap: wrap;
+}
+button {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #eef4f8;
+  background: #14324a;
+  border: 1px solid #2a4d68;
+  border-radius: 10px;
+  padding: 9px 16px;
+  cursor: pointer;
+}
+button:hover:not(:disabled) { background: #1d4565; }
+button:disabled { opacity: 0.45; cursor: default; }
+button.primary {
+  background: #ffd54a;
+  color: #0c1b2e;
+  border-color: #ffd54a;
+  font-size: 17px;
+  padding: 12px 22px;
+}
+button.primary:hover { background: #ffdf7a; }
+.controls-hint { color: #9fc3d8; font-size: 13px; margin-left: 6px; }
+
+.screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 14, 25, 0.82);
+  padding: 20px;
+}
+.screen.visible { display: flex; }
+.screen-card {
+  background: #10273d;
+  border: 1px solid #2a4d68;
+  border-radius: 16px;
+  padding: 28px 34px;
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+.screen-card.wide { max-width: 720px; }
+.screen-card h1 { font-size: 44px; margin: 0; color: #ffd54a; }
+.screen-card h2 { font-size: 30px; margin: 0 0 10px; color: #ffd54a; }
+.tagline { font-size: 20px; margin: 4px 0 14px; color: #9fc3d8; }
+.intro { font-size: 16px; line-height: 1.55; color: #d7e5ee; }
+.fine { font-size: 13px; color: #7fa3b8; margin-top: 18px; }
+.menu-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+#how-panel {
+  display: none;
+  text-align: left;
+  background: #0c1b2e;
+  border: 1px solid #2a4d68;
+  border-radius: 10px;
+  padding: 6px 16px;
+  margin-top: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+#how-panel.visible { display: block; }
+.big-score { font-size: 24px; font-weight: 800; color: #ffd54a; }
+.stars { font-size: 40px; color: #ffd54a; letter-spacing: 6px; margin: 6px 0; }
+
+#select-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 16px 0;
+}
+.select-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 10px;
+  text-align: center;
+}
+.select-number { font-size: 26px; font-weight: 800; color: #ffd54a; }
+.select-name { font-size: 15px; font-weight: 700; }
+.select-meta { font-size: 12px; color: #9fc3d8; }
